@@ -1,0 +1,69 @@
+<?php
+
+
+namespace WallaceMaxters\SevenFramework\Routing;
+
+use WallaceMaxters\SevenFramework\TraitHelpers\CreateObjectTrait;
+
+use WallaceMaxters\SevenFramework\Http\Request;
+
+use WallaceMaxters\SevenFramework\Http\Response;
+
+use WallaceMaxters\SevenFramework\View\View;
+
+use UnexpectedValueException;
+
+
+class Dispatcher
+{
+
+	use CreateObjectTrait;
+
+	/**
+	 * 
+	 * @var WallaceMaxters\SevenFramework\Http\Request;
+	 **/
+	protected $request;
+
+	protected $route;
+
+	public function __construct(Request $request, Route $route)
+	{
+		$this->request = $request;
+
+		$this->route = $route;
+	}
+
+	public function call()
+	{
+		$path = $this->request->getPathinfo();
+
+		$parameters = $this->route->getParameters($path);
+
+		$action = $this->route->getAction();
+
+		if ($action instanceof  \Closure) {
+
+			// Lembrar de passar o request 
+
+			$response = $action->call($this->request, ...$parameters);
+
+		} else {
+
+			$controller = new $action[0]();
+
+			$method = $action[1];
+
+			$response = $controller->$method(...$parameters);
+		}
+
+
+		if (! $response instanceof Response) {
+
+			$response = Response::create((string)$response, 200);
+		}
+
+		$response->send();
+
+	}
+}

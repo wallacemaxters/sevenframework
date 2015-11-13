@@ -1,0 +1,16 @@
+{
+    "name": "wallacemaxters/sevenframework",
+    "description": "A framework for php 7",
+    "authors": [
+        {
+            "name": "Wallace de Souza",
+            "email": "wallacemaxters@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload" : {
+    	"psr-4" : {
+    		"WallaceMaxters\\SevenFramework\\" : "src/SevenFramework"
+    	}
+    }
+}
