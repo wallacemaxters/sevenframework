@@ -34,7 +34,7 @@ class Dispatcher
 		$this->route = $route;
 	}
 
-	public function call()
+	public function getResponse()
 	{
 		$path = $this->request->getPathinfo();
 
@@ -63,7 +63,7 @@ class Dispatcher
 			$response = Response::create((string)$response, 200);
 		}
 
-		$response->send();
+		return $response;
 
 	}
 }

@@ -32,6 +32,11 @@ class Route implements RouteInterface
 
 	protected $name = null;
 
+	/**
+	 *@var array
+	 * */
+	protected $filters = [];
+
 
 	const ANY_METHOD_WILDCARD = '*';
 
@@ -161,6 +166,16 @@ class Route implements RouteInterface
 	{
 
 		return $this->name;
+	}
+
+	public function setFilters(string ...$filters)
+	{
+		$this->filters = $filter;
+	}
+
+	public function getFilters()
+	{
+		return $this->filters;
 	}
 
 }

@@ -2,6 +2,8 @@
 
 namespace WallaceMaxters\SevenFramework\Routing;
 
+use WallaceMaxters\SevenFramework\Http\Request;
+
 class Router
 {
 	/**
@@ -29,7 +31,7 @@ class Router
 		$this->basePath = rtrim($basePath, '/');
 	}
 
-	public function match(string $requestUrl, string $requestMethod = 'GET')
+	public function findRoute(string $requestUrl, string $requestMethod = 'GET')
 	{	
 		
 		// Determine the prefix for collection
@@ -51,9 +53,28 @@ class Router
 
 	}
 
-	public function matchRequest(Request $request)
+	public function findRouteByRequest(Request $request)
 	{
-		return $this->match($request->getUri(), $request->getMethod());
+		return $this->findRoute($request->getPathinfo(), $request->getMethod());
+	}
+
+	public function dispatchToRoute(Request $request)
+	{
+		$route = $this->findRouteByRequest($request);
+
+		if ($route === false) {
+
+			throw new \Exception('Rota não existe');
+		}
+
+		//$route->callEvent('before', $request);
+
+		$response = (new Dispatcher($request, $route))->getResponse();
+
+		//$route->callEvent('after', $request, $response);
+
+		return $response;
+
 	}
 
 }

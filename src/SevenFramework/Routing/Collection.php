@@ -3,6 +3,7 @@
 namespace WallaceMaxters\SevenFramework\Routing;
 
 use SplObjectStorage;
+use ArrayAccess;
 
 use WallaceMaxters\SevenFramework\Routing\Exceptions\RouteNotFoundException;
 
