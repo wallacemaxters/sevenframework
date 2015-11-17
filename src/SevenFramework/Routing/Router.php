@@ -4,6 +4,9 @@ namespace WallaceMaxters\SevenFramework\Routing;
 
 use WallaceMaxters\SevenFramework\Http\Request;
 
+use WallaceMaxters\SevenFramework\Exceptions\HttpNotFoundException;
+
+
 class Router
 {
 	/**
@@ -64,7 +67,7 @@ class Router
 
 		if ($route === false) {
 
-			throw new \Exception('Rota não existe');
+			throw new HttpNotFoundException('Rota não existe');
 		}
 
 		//$route->callEvent('before', $request);
@@ -75,6 +78,38 @@ class Router
 
 		return $response;
 
+	}
+
+	public function addRoute(array $methods, string $pattern, $action)
+	{
+		$newRoute = new Route($pattern, $action);
+
+		$newRoute->setMethods($methods);
+
+		$this->routes->add($newRoute);
+
+		return $this;
+	}
+
+
+	public function get(string $pattern, $action)
+	{
+		return $this->addRoute(['GET', 'HEAD'], $pattern, $action);
+	}
+
+	public function put(string $pattern, $action)
+	{
+		return $this->addRoute(['PUT'], $pattern, $action);
+	}
+
+	public function post(string $pattern, $action)
+	{
+		return $this->addRoute(['POST'], $pattern, $action);
+	}
+
+	public function delete(string $pattern, $action)
+	{
+		return $this->addRoute(['DELETE'], $pattern, $action);
 	}
 
 }

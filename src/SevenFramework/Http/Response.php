@@ -72,6 +72,15 @@ class Response
 	public function send()
 	{
 
+		$this->sendHeaders();
+
+		$this->sendContent();
+
+		return $this;
+	}
+
+	public function sendHeaders()
+	{
 		if (! $this->sent()) {
 
 			$this->sent = true;
@@ -84,10 +93,17 @@ class Response
 			}
 		}
 
+		return $this;
+	}
+
+	public function sendContent()
+	{
 		echo $this->getContent();
 
 		return $this;
 	}
+
+
 
 	public function sent()
 	{

@@ -10,38 +10,40 @@ use WallaceMaxters\SevenFramework\Routing\Router;
 use WallaceMaxters\SevenFramework\Routing\Dispatcher;
 use WallaceMaxters\SevenFramework\Http\Request;
 use WallaceMaxters\SevenFramework\View\View;
+use WallaceMaxters\SevenFramework\Http\HttpKernel;
+use WallaceMaxters\SevenFramework\Http\JsonResponse;
 
-// Teste callable action
-$r = new Route('teste/{num}', function (int $num = 0)
+
+HttpKernel::create()
+->routes(function ($router)
 {
-	$nome = mb_strtoupper($this->getQuery('nome'));
 
-	$view = View::create('templates/index', ['nome' => $nome]);
+	$router->get('/', function ()
+	{
+		return "Página inicial";
+	});
 
-	$view->getData()->offsetSet('nome', "Eu sou o número #{$num}");
+	$router->get('/teste', function ()
+	{
+		return "Meu pequeno teste";
+	});
 
-	return $view;
-});
+	$router->get('/teste/{num}', function (int $int)
+	{
+		return "Testando o parâmetro de número #{$int}";
+	});
 
+	$router->get('/json', function ()
+	{
+		return new JsonResponse([
+			'framework' => 'SevenFramework - A framework for PHP 7'
+		]);
+	});
 
-$r->setFilters('maior_de_idade');
-
-$request = new Request;
-
-$collection = new Collection();
-
-$collection->add($r);
-
-$router = new Router($collection);
-
-try {
-	
-	$router->dispatchToRoute($request)->send();
-
-} catch (Exception $e) {
-
-}
-
-
-
+	$router->get('/view', function ()
+	{
+		return View::create('templates/index', ['nome' => 'SevenFramework']);
+	});
+})
+->run();
  

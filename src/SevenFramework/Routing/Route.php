@@ -4,8 +4,9 @@ namespace WallaceMaxters\SevenFramework\Routing;
 
 use WallaceMaxters\SevenFramework\Exceptions\ControllerNotFoundException;
 
-use WallaceMaxters\SevenFramework\Http\Request;
 
+
+use WallaceMaxters\SevenFramework\Http\Request;
 /**
  * Representa uma rota
  * 
@@ -40,7 +41,7 @@ class Route implements RouteInterface
 
 	const ANY_METHOD_WILDCARD = '*';
 
-	public function __construct(string $pattern, $action = null, array $methods = ['*'])
+	public function __construct(string $pattern, $action = null, array $methods = [self::ANY_METHOD_WILDCARD])
 	{
 		$this->setPattern($pattern);
 
@@ -164,13 +165,12 @@ class Route implements RouteInterface
 
 	public function getName() : string 
 	{
-
 		return $this->name;
 	}
 
 	public function setFilters(string ...$filters)
 	{
-		$this->filters = $filter;
+		$this->filters = $filters;
 	}
 
 	public function getFilters()
