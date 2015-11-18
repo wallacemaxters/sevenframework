@@ -2,15 +2,13 @@
 
 namespace WallaceMaxters\SevenFramework\Routing;
 
+/**
+ * 
+ * @deprecated 
+ * @todo remove in next version
+ * */
 interface RouteInterface
 {
-	const PATTERN_TRANSLATION = array(
-		'*'     => '(.*)',
-		'{num}' => '(\d+)',
-		'{str}' => '([a-z0-9-_]+)',
-		'/'     => '\/',
-		'\\'    => '\\\\'
-	);
 
 	public function setPattern(string $pattern);
 

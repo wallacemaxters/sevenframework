@@ -23,6 +23,11 @@ class Router
 
 	protected $routes;
 
+	/**
+	 * @var array
+	 * */
+	protected $filters = [];
+
 
 	public function __construct(Collection $routes)
 	{
@@ -56,6 +61,18 @@ class Router
 
 	}
 
+	public function setFilter(string $name, callable $callback)
+	{
+		$this->filters[$name] = $callback;
+
+		return $this;
+	}
+
+	public function getFilter(string $name)
+	{
+		return $this->filters[$name] ?? NULL;
+	}
+
 	public function findRouteByRequest(Request $request)
 	{
 		return $this->findRoute($request->getPathinfo(), $request->getMethod());
@@ -64,6 +81,14 @@ class Router
 	public function dispatchToRoute(Request $request)
 	{
 		$route = $this->findRouteByRequest($request);
+
+		/** 
+		* @todo Chamar as filtros somente se existir na rota
+		* **/
+		foreach ($route->getFilters() as $name) {
+
+			$callable = $this->getFilter($name);
+		}
 
 		if ($route === false) {
 
@@ -88,7 +113,7 @@ class Router
 
 		$this->routes->add($newRoute);
 
-		return $this;
+		return $newRoute;
 	}
 
 

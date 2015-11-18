@@ -1,31 +1,54 @@
-<form target="meu_iframe">
-  <input type="text" name="nome" />
-  <input type="submit" />
-</form>
-
-<iframe name="meu_iframe">
 <?php
 
+error_reporting(-1);
 
-print_r($_GET);
+include_once __DIR__ . '/vendor/autoload.php';
 
-
-// include_once __DIR__ . '/vendor/autoload.php';
-
-
-// use WallaceMaxters\SevenFramework\Routing\Route;
-// use WallaceMaxters\SevenFramework\Routing\Collection as RouteCollection;
-
-
-// #Route Test
-
-// $route = (new Route('home/{str}/{num}', function () {
-
-// }))->setMethod('POST');
+use WallaceMaxters\SevenFramework\Routing\Route;
+use WallaceMaxters\SevenFramework\Routing\Collection;
+use WallaceMaxters\SevenFramework\Routing\Router;
+use WallaceMaxters\SevenFramework\Routing\Dispatcher;
+use WallaceMaxters\SevenFramework\Http\Request;
+use WallaceMaxters\SevenFramework\View\View;
+use WallaceMaxters\SevenFramework\Http\HttpKernel;
+use WallaceMaxters\SevenFramework\Http\JsonResponse;
 
 
-// $rc = new RouteCollection;
+HttpKernel::create()->routes(function ($router)
+{
 
-// $rc->add($route);
+	$router->get('/', function ()
+	{
+		return "Página inicial";
+	});
 
-// print_r($rc->find('home/teste/3'));
+	$router->get('/teste', function ()
+	{
+		return "Meu pequeno teste";
+	});
+
+	$router->get('/teste/{num}', function (int $int)
+	{
+		return "Testando o parâmetro de número #{$int}";
+	});
+
+	$router->get('/json', function ()
+	{
+		return new JsonResponse([
+			'framework' => 'SevenFramework - A framework for PHP 7'
+		]);
+	});
+
+	$router->get('/view', function ()
+	{
+		return View::create('templates/index', ['nome' => 'SevenFramework']);
+	});
+
+
+	$router->get('{tudo}', function (string $date)
+	{
+		return new JsonResponse(func_get_args());
+	});
+})
+->run();
+ 

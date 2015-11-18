@@ -4,14 +4,12 @@ namespace WallaceMaxters\SevenFramework\Routing;
 
 use WallaceMaxters\SevenFramework\Exceptions\ControllerNotFoundException;
 
-
-
 use WallaceMaxters\SevenFramework\Http\Request;
 /**
  * Representa uma rota
  * 
  * */
-class Route implements RouteInterface
+class Route
 {
 
 	protected $methods = ['*'];
@@ -40,6 +38,20 @@ class Route implements RouteInterface
 
 
 	const ANY_METHOD_WILDCARD = '*';
+
+	const PATTERN_TRANSLATION = array(
+		'*'      => '(.*)',
+		'{num}'  => '(\d+)',
+		'{num?}'  => '?(\d+)?',
+		'{str}'  => '([a-z0-9-_]+)',
+		'{str?}'  => '?([a-z0-9-_]+)?',
+		'/'      => '\/',
+		'\\'     => '\\\\',
+		'{date}' => '(\d{4}\/\d{2}\/\d{2})',
+		'{date?}' => '?(\d{4}\/\d{2}\/\d{2})?'
+	);
+
+	public $patternTransliations = [];
 
 	public function __construct(string $pattern, $action = null, array $methods = [self::ANY_METHOD_WILDCARD])
 	{
@@ -79,7 +91,6 @@ class Route implements RouteInterface
 		$this->action = $parts;
 
 	}
-
 
 	public function setPattern(string $pattern)
 	{	
@@ -136,7 +147,17 @@ class Route implements RouteInterface
 
 	public function getParsedPattern() : string
 	{
-		return '/^\/?' . strtr($this->pattern, static::PATTERN_TRANSLATION) . '\/?$/';
+		return '/^\/?' . strtr($this->pattern, $this->getPatternTranslations()) . '\/?$/';
+	}
+
+	protected function getPatternTranslations()
+	{
+		return $this->patternTransliations + static::PATTERN_TRANSLATION;
+	}
+
+	public function where(string $wildcard, string $regex)
+	{
+		$this->patternTransliations[$wildcard] = $regex;
 	}
 
 	public function match(string $url) : bool
