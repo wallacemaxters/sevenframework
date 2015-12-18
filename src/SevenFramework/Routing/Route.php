@@ -5,10 +5,14 @@ namespace WallaceMaxters\SevenFramework\Routing;
 use WallaceMaxters\SevenFramework\Exceptions\ControllerNotFoundException;
 
 use WallaceMaxters\SevenFramework\Http\Request;
+
+use LengthException;
+
 /**
  * Representa uma rota
  * 
  * */
+
 class Route
 {
 
@@ -51,7 +55,7 @@ class Route
 		'{date?}' => '?(\d{4}\/\d{2}\/\d{2})?'
 	);
 
-	public $patternTransliations = [];
+	public $patternTranslations = [];
 
 	public function __construct(string $pattern, $action = null, array $methods = [self::ANY_METHOD_WILDCARD])
 	{
@@ -152,12 +156,12 @@ class Route
 
 	protected function getPatternTranslations()
 	{
-		return $this->patternTransliations + static::PATTERN_TRANSLATION;
+		return $this->patternTranslations + static::PATTERN_TRANSLATION;
 	}
 
 	public function where(string $wildcard, string $regex)
 	{
-		$this->patternTransliations[$wildcard] = $regex;
+		$this->patternTranslations[$wildcard] = $regex;
 	}
 
 	public function match(string $url) : bool

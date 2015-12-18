@@ -103,50 +103,14 @@ class Response
 		return $this;
 	}
 
-
-
 	public function sent()
 	{
 		return $this->sent || headers_sent();
 	}
 
-	public static function create(string $content = '', int $status = 200, callable $callback = null)
+	public static function json(...$arguments)
 	{
-		$response = new static($content, $status);
-
-		$header = new Header;
-
-		$response->setHeader($header);
-
-		if ($callback !== null) {
-
-			$callback($response, $header);
-		}
-
-		return $response;
-
-	}
-
-	public static function json($data, $status = 200, array $headers = [])
-	{
-
-		$json = json_encode($data);
-
-		$response = new static($json, $status);
-
-		$header = new Header;
-
-		foreach ($headers as $name => $value) {
-
-			$header->set($name, $value);
-		}
-
-		$header->setContentType('application/json');
-
-		$response->setHeader($header);
-
-		return $response;
-
+		return new JsonResponse(...$arguments);
 	}
 
 }

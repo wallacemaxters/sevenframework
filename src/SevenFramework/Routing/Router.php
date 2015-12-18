@@ -29,9 +29,9 @@ class Router
 	protected $filters = [];
 
 
-	public function __construct(Collection $routes)
-	{
-		$this->routes = $routes;
+	public function __construct(Collection $routes = null)
+	{	
+		$this->routes = $routes ?? new Collection;
 	}
 
 	public function setBasepath(string $basePath)
@@ -51,26 +51,8 @@ class Router
 			return $route->match($requestUrl) && $route->isAcceptedMethod($requestMethod);
 		});
 
-
-		if ($route === false) {
-
-			return false;
-		}
-
 		return $route;
 
-	}
-
-	public function setFilter(string $name, callable $callback)
-	{
-		$this->filters[$name] = $callback;
-
-		return $this;
-	}
-
-	public function getFilter(string $name)
-	{
-		return $this->filters[$name] ?? NULL;
 	}
 
 	public function findRouteByRequest(Request $request)
@@ -82,6 +64,11 @@ class Router
 	{
 		$route = $this->findRouteByRequest($request);
 
+		if ($route === false) {
+
+			throw new HttpNotFoundException('Rota não existe');
+		}
+
 		/** 
 		* @todo Chamar as filtros somente se existir na rota
 		* **/
@@ -90,16 +77,7 @@ class Router
 			$callable = $this->getFilter($name);
 		}
 
-		if ($route === false) {
-
-			throw new HttpNotFoundException('Rota não existe');
-		}
-
-		//$route->callEvent('before', $request);
-
 		$response = (new Dispatcher($request, $route))->getResponse();
-
-		//$route->callEvent('after', $request, $response);
 
 		return $response;
 

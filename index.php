@@ -11,44 +11,21 @@ use WallaceMaxters\SevenFramework\Routing\Dispatcher;
 use WallaceMaxters\SevenFramework\Http\Request;
 use WallaceMaxters\SevenFramework\View\View;
 use WallaceMaxters\SevenFramework\Http\HttpKernel;
+use WallaceMaxters\SevenFramework\Application\Application;
 use WallaceMaxters\SevenFramework\Http\JsonResponse;
+use WallaceMaxters\SevenFramework\Http\Response;
 
 
-HttpKernel::create()->routes(function ($router)
+$router = new Router;
+
+$request = new Request;
+
+$router->addRoute(['*'], '/', function () use($request)
 {
+	return Response::json([
+		'teste'               => 'testando',
+		$request->getMethod() => $_POST
+	]);
+});
 
-	$router->get('/', function ()
-	{
-		return "Página inicial";
-	});
-
-	$router->get('/teste', function ()
-	{
-		return "Meu pequeno teste";
-	});
-
-	$router->get('/teste/{num}', function (int $int)
-	{
-		return "Testando o parâmetro de número #{$int}";
-	});
-
-	$router->get('/json', function ()
-	{
-		return new JsonResponse([
-			'framework' => 'SevenFramework - A framework for PHP 7'
-		]);
-	});
-
-	$router->get('/view', function ()
-	{
-		return View::create('templates/index', ['nome' => 'SevenFramework']);
-	});
-
-
-	$router->get('{tudo}', function (string $date)
-	{
-		return new JsonResponse(func_get_args());
-	});
-})
-->run();
- 
+$router->dispatchToRoute($request)->send();

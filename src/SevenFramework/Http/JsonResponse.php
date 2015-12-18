@@ -22,7 +22,4 @@ class JsonResponse extends Response
 		$this->setHeader($header);
 	}
 
-
-
-
 }

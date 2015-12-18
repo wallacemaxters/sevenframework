@@ -17,7 +17,6 @@ class Collection
 	 * */
 	protected $storage;
 
-
 	protected $ignoreds;
 
 	public function __construct()

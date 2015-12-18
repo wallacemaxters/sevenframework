@@ -2,31 +2,18 @@
 
 namespace WallaceMaxters\SevenFramework\Controller;
 
-abstract class Controller
+abstract class Controller implements ControllerInterface
 {
-
 	private $request;
-
-	private $response;
-
-	public function __construct(Request $request, Response $response)
-	{
-		$this->request = $request;
-
-		$this->response = $response;
-	}
-
 
 	public function getRequest() : Request
 	{
 		return $this->request;
 	}
 
-	public function getResponse() : Response
+	public function setRequest(Request $request)
 	{
-		return $this->response;
+		$this->request = $request;
 	}
-
-
 
 }

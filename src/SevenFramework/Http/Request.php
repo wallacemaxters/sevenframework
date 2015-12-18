@@ -32,7 +32,7 @@ class Request
 		return $this->getMethod() == strtoupper($method);
 	}
 
-	public function getMethod(): string
+	public static function getMethod(): string
 	{
 		return filter_input(INPUT_SERVER, 'REQUEST_METHOD') ?? 'GET';
 	}
@@ -51,22 +51,5 @@ class Request
 	{
 		return filter_input(INPUT_SERVER, 'PATH_INFO') ?? '/';
 	}
-
-	public static function getQuery(string $name, ...$arguments)
-	{
-		return filter_input(INPUT_GET, $name, ...$arguments);
-	}
-
-	public static function getPost(string $name, ...$arguments)
-	{
-		return filter_input(INPUT_GET, $name, ...$arguments);
-	}
-
-	public static function getServer(string $name, ...$arguments)
-	{
-		return filter_input(INPUT_SERVER, $name, ...$arguments);
-	}
-
-	
 
 }

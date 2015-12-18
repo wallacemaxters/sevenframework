@@ -16,9 +16,6 @@ use UnexpectedValueException;
 
 class Dispatcher
 {
-
-	use CreateObjectTrait;
-
 	/**
 	 * 
 	 * @var WallaceMaxters\SevenFramework\Http\Request;
@@ -42,11 +39,11 @@ class Dispatcher
 
 		$action = $this->route->getAction();
 
-		if ($action instanceof  \Closure) {
+		if ($action instanceof \Closure) {
 
 			// Lembrar de passar o request 
 
-			$response = $action->call($this->request, ...$parameters);
+			$response = $action(...$parameters);
 
 		} else {
 
@@ -60,7 +57,7 @@ class Dispatcher
 
 		if (! $response instanceof Response) {
 
-			$response = Response::create((string)$response, 200);
+			$response = new Response((string)$response, 200);
 		}
 
 		return $response;
