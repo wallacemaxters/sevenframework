@@ -24,27 +24,7 @@ class Request
 	{
 		return $this->getMethod() == strtoupper($method);
 	}
-
-	// public static function getMethod(): string
-	// {
-	// 	return filter_input(INPUT_SERVER, 'REQUEST_METHOD') ?? 'GET';
-	// }
-
-	// public function getHeader()
-	// {
-	// 	return $this->header;
-	// }
-
-	// public static function getUri()
-	// {
-	// 	return filter_input(INPUT_SERVER, 'REQUEST_URI');
-	// }
-
-	// public function getPathinfo()
-	// {
-	// 	return filter_input(INPUT_SERVER, 'PATH_INFO') ?? '/';
-	// }
-
+	
 	public function setMethod(string $method)
 	{
 		$this->method = strtoupper($method);
