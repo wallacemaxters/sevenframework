@@ -13,29 +13,37 @@ use WallaceMaxters\SevenFramework\Routing\Exceptions\RouteNotFoundException;
 class Collection
 {
 	/**
-	 * @var \SplObjectStorage
+	 * @var array
 	 * */
-	protected $storage;
-
-	protected $ignoreds;
+	protected $storage = [];
 
 	public function __construct()
 	{
-		$this->storage = new SplObjectStorage;
 	}
 
+	/**
+	* @param \WallaceMaxters\SevenFramework\Routing\Route $route
+	* @return \WallaceMaxters\SevenFramework\Routing
+	*/
 	public function add(Route $route)
 	{
-		$this->storage->attach($route, $route->getParsedPattern());
+		$this->storage[] = $route;
 
 		return $this;
 	}
 
-	public function all() : SplObjectStorage
+	/**
+	* @return array
+	*/	
+	public function all() : array
 	{
 		return $this->storage;
 	}
 
+	/**
+	* @param string $pattern
+	* @return \WallaceMaxters\SevenFramework\Routing\Route | null
+	*/
 	public function find(string $pattern)
 	{
 
@@ -48,6 +56,10 @@ class Collection
 		}
 	}
 
+	/**
+	* @param Closure $callbak
+	* @return \WallaceMaxters\SevenFramework\Routing\Route | null 
+	*/
 	public function first(\Closure $callback)
 	{
 		foreach ($this->storage as $route) {
@@ -61,7 +73,6 @@ class Collection
 		return false;
 	}
 
-
 	public function findOrFail(string $pattern) : Route
 	{
 		$route = $this->find($pattern);
@@ -72,10 +83,7 @@ class Collection
 			
 		}
 
-
 		return $route;
 
 	}
-
-
 }

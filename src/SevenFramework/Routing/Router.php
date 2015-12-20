@@ -60,6 +60,18 @@ class Router
 		return $this->findRoute($request->getPathinfo(), $request->getMethod());
 	}
 
+	/**
+	* Returns route by given name
+	* @param string $name
+	*/
+	public function findRouteByName(string $name)
+	{
+		return $this->routes->first(function ($route) use($name)
+		{
+			return $route->getName() === $name;
+		});
+	}
+
 	public function dispatchToRoute(Request $request)
 	{
 		$route = $this->findRouteByRequest($request);

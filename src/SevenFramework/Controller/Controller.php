@@ -4,7 +4,7 @@ namespace WallaceMaxters\SevenFramework\Controller;
 
 use WallaceMaxters\SevenFramework\Http\Request;
 
-abstract class Controller implements ControllerInterface
+class Controller implements ControllerInterface
 {
 	/**
 	* @var \WallaceMaxters\SevenFramework\Http\Request
@@ -26,6 +26,5 @@ abstract class Controller implements ControllerInterface
 	public function getRequest() : Request
 	{
 		return $this->request;
-	}
-
+	}	
 }

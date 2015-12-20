@@ -21,7 +21,6 @@ class SectionCollection implements IteratorAggregate
 		return false;
 	}
 
-
 	public function findOrCreate(string $name)
 	{
 		$section = $this->find($name);
@@ -82,5 +81,7 @@ class SectionCollection implements IteratorAggregate
 	public function clear()
 	{
 		$this->sections = [];
+
+		return $this;
 	}
 }

@@ -4,6 +4,8 @@ namespace WallaceMaxters\SevenFramework\Routing;
 
 use WallaceMaxters\SevenFramework\Exceptions\ControllerNotFoundException;
 
+use WallaceMaxters\SevenFramework\Controller\ControllerInterface;
+
 use WallaceMaxters\SevenFramework\Http\Request;
 
 use LengthException;
@@ -82,14 +84,20 @@ class Route
 			throw new LengthException('Malformed action string');
 		}
 
-		if (! class_exists($parts[0])) {
+		if (! is_subclass_of($parts[0], ControllerInterface::class)) {
 
-			throw new ControllerNotFoundException("Controller {$parts[0]} doesn't exist");
+			throw new ControllerNotFoundException(
+				sprintf(
+					"%s doesn't exist or doesnt implements %s",
+					$parts[0],
+					ControllerInterface::class
+				)
+			);
 		}
 
 		if (! method_exists($parts[0], $parts[1])) {
 
-			throw new InvalidArgumentException("Action {$parts[1]} doesn't exist");
+			throw new InvalidArgumentException("Action {$parts[0]}::{$parts[1]}() doesn't exist");
 		}
 
 		$this->action = $parts;
@@ -183,12 +191,7 @@ class Route
 		return $this;
 	}
 
-	public function hasName() : bool
-	{
-		return $this->name !== null;
-	}
-
-	public function getName() : string 
+	public function getName() 
 	{
 		return $this->name;
 	}

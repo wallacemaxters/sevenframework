@@ -3,15 +3,11 @@
 
 namespace WallaceMaxters\SevenFramework\Routing;
 
-use WallaceMaxters\SevenFramework\TraitHelpers\CreateObjectTrait;
-
 use WallaceMaxters\SevenFramework\Http\Request;
-
 use WallaceMaxters\SevenFramework\Http\Response;
-
 use WallaceMaxters\SevenFramework\View\View;
-
 use UnexpectedValueException;
+use WallaceMaxters\SevenFramework\Controller\Controller;
 
 
 class Dispatcher
@@ -41,26 +37,31 @@ class Dispatcher
 
 		if ($action instanceof \Closure) {
 
-			// Lembrar de passar o request 
+			$nullController = new Controller;
 
-			$response = $action(...$parameters);
+			$nullController->setRequest($this->request);
+
+			$response = $action->call($nullController, ...$parameters);
 
 		} else {
 
 			$controller = new $action[0]();
+
+			$controller->setRequest($this->request);
 
 			$method = $action[1];
 
 			$response = $controller->$method(...$parameters);
 		}
 
+		
 
 		if (! $response instanceof Response) {
 
 			$response = new Response((string)$response, 200);
 		}
 
-		return $response;
+		return $response->send();
 
 	}
 }

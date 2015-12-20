@@ -16,9 +16,19 @@ use WallaceMaxters\SevenFramework\Http\JsonResponse;
 use WallaceMaxters\SevenFramework\Http\Response;
 
 
+class BasicController extends \WallaceMaxters\SevenFramework\Controller\Controller
+{
+	public function getPage()
+	{
+		$request = $this->getRequest();
+
+		return Response::json($request->getQuery());
+	}
+}
+
 $router = new Router;
 
-$request = new Request;
+$request = Request::createFromGlobals();
 
 $router->addRoute(['*'], '/', function () use($request)
 {
@@ -28,4 +38,11 @@ $router->addRoute(['*'], '/', function () use($request)
 	]);
 });
 
-$router->dispatchToRoute($request)->send();
+$r = $router->get('/page', 'BasicController::getPage')
+			->setName('basic.page');
+
+
+$router->dispatchToRoute($request);
+
+
+

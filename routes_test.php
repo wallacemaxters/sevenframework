@@ -20,11 +20,10 @@ class Ctrl {
 	}
 }
 
-
 // Teste callable action
 $r = new Route('teste/{num}', function (int $num)
 {
-	$nome = mb_strtoupper($this->getQuery('nome'));
+	$nome = $this->getRequest()->getQuery('nome');
 
 	$view = View::create('templates/index', ['nome' => $nome]);
 
@@ -33,7 +32,11 @@ $r = new Route('teste/{num}', function (int $num)
 	return $view;
 });
 
-$request = new Request;
+$request = Request::createFromGlobals();
 
-Dispatcher::create($request, $r)->call();
+try {
+	(new Dispatcher($request, $r))->getResponse();	
+} catch (\Throwable $e) {
+	echo $e;
+}
 

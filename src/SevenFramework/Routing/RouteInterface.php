@@ -10,7 +10,11 @@ namespace WallaceMaxters\SevenFramework\Routing;
 interface RouteInterface
 {
 
-	public function setPattern(string $pattern);
+	public function getName(): string;
 
 	public function getPattern(): string;
+
+	public function setName(string $name);
+	
+	public function setPattern(string $pattern);
 }

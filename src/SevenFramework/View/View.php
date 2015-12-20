@@ -123,8 +123,6 @@ class View
 	{
 		$section = $this->sections->last();
 
-		$section = $this->sections->last();
-
 		if (! $section) {
 
 			throw new RuntimeException('closeSection called without start a section');
@@ -157,7 +155,7 @@ class View
 
 	public function extend($name)
 	{
-		$this->extendedView = new static($name);
+		$this->extendedView = new self($name);
 	}
 
 	public function handleExcepton($e)
@@ -169,6 +167,5 @@ class View
 	{
 		return $this->render();
 	}
-
 
 }
