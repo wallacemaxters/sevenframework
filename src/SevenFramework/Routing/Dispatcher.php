@@ -5,10 +5,10 @@ namespace WallaceMaxters\SevenFramework\Routing;
 
 use WallaceMaxters\SevenFramework\Http\Request;
 use WallaceMaxters\SevenFramework\Http\Response;
+use WallaceMaxters\SevenFramework\Http\Exceptions\HttpException;
 use WallaceMaxters\SevenFramework\View\View;
 use UnexpectedValueException;
 use WallaceMaxters\SevenFramework\Controller\Controller;
-
 
 class Dispatcher
 {

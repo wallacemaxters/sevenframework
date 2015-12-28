@@ -43,8 +43,3 @@ class ComposerAutoloaderInite5a951c88d82482c38145147bec9e409
         return $loader;
     }
 }
-
-function composerRequiree5a951c88d82482c38145147bec9e409($file)
-{
-    require $file;
-}

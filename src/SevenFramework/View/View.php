@@ -2,6 +2,7 @@
 
 namespace WallaceMaxters\SevenFramework\View;
 
+use Throwable;
 use ArrayObject;
 use SplObjectStorage;
 use RuntimeException;
@@ -24,7 +25,7 @@ class View
 	/**
 	 * @var string
 	*/
-	protected $extension = '.php';
+	protected $extension = 'php';
 
 	/**
 	 * @var Section
@@ -32,7 +33,7 @@ class View
 	protected $extendedView;
 
 	/**
-	 * @var \SplObjectStorage
+	 * @var WallaceMaxters\SevenFramework\View\SectionCollection
 	 * */
 	protected $sections;
 
@@ -47,7 +48,6 @@ class View
 
 		$this->setDataArray($data);
 	}
-
 
 	public function getData() : ArrayObject
 	{
@@ -73,10 +73,10 @@ class View
 
 	public function getName() : string
 	{
-		return $this->name . $this->extension;
+		return $this->name . '.' . $this->extension;
 	}
 
-	public function render()
+	public function render() : string
 	{
 		ob_start();
 
@@ -99,7 +99,7 @@ class View
 		return ltrim(ob_get_clean());
 	}
 
-	public function startSection($name)
+	public function startSection(string $name)
 	{
 		$section = $this->sections->findOrCreate($name);
 
@@ -131,7 +131,7 @@ class View
 		$section->append();
 	}
 
-	public function getSection(string $name, string $default = '')
+	public function getSection(string $name, string $default = '') : string
 	{
 		$section = $this->sections->find($name);
 
@@ -143,7 +143,7 @@ class View
 		return $default;
 	}
 
-	public function getSectionsCollection()
+	public function getSectionsCollection() : SectionCollection
 	{
 		return $this->sections;
 	}
@@ -153,17 +153,17 @@ class View
 		$this->sections = $sections;
 	}
 
-	public function extend($name)
+	public function extend(string $name, array $data = [])
 	{
-		$this->extendedView = new self($name);
+		$this->extendedView = new self($name, $data);
 	}
 
-	public function handleExcepton($e)
+	public function handleExcepton(Throwable $exception)
 	{
-		return $e->getMessage();
+		return $exception->getMessage();
 	}
 
-	public function __toString()
+	public function __toString() 
 	{
 		return $this->render();
 	}

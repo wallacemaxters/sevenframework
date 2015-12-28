@@ -9,17 +9,25 @@ use IteratorAggregate;
 class SectionCollection implements IteratorAggregate
 {
 
+	/**
+	* @var array
+	*/
 	protected $sections = [];
 
+	/**
+	* @param string $name
+	* @return \WallaceMaxters\SevenFramework\View\Section | false
+	*/
 	public function find(string $name)
 	{
-		if (isset($this->sections[$name])) {
 
-			return $this->sections[$name];
-
-		}
-		return false;
+		return $this->sections[$name] ?? false;
 	}
+
+	/**
+	* @param string $name
+	* @return \WallaceMaxters\SevenFramework\View\Section
+	*/
 
 	public function findOrCreate(string $name)
 	{
@@ -34,6 +42,10 @@ class SectionCollection implements IteratorAggregate
 
 		return $section;
 	}
+
+	/**
+	* @return \ArrayIterator
+	*/
 
 	public function getIterator()
 	{
@@ -57,16 +69,11 @@ class SectionCollection implements IteratorAggregate
 
 	public function pop(string $name = null)
 	{	
-		if (! $name) {
-			return array_pop($this->sections);
-		}
-
+		if ($name === null) return array_pop($this->sections);
+		
 		$section = $this->find($name);
 
-		if (! $section) {
-
-			return null;
-		}
+		if ($section === false) return null;
 
 		$this->detach($section);
 

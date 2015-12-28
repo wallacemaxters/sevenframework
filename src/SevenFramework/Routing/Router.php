@@ -4,7 +4,7 @@ namespace WallaceMaxters\SevenFramework\Routing;
 
 use WallaceMaxters\SevenFramework\Http\Request;
 
-use WallaceMaxters\SevenFramework\Exceptions\HttpNotFoundException;
+use WallaceMaxters\SevenFramework\Http\Exceptions\{HttpException, NotFoundException};
 
 
 class Router
@@ -39,16 +39,13 @@ class Router
 		$this->basePath = rtrim($basePath, '/');
 	}
 
-	public function findRoute(string $requestUrl, string $requestMethod = 'GET')
+
+	public function findRoute(string $requestUrl)
 	{	
 		
-		// Determine the prefix for collection
-
-		$requestUrl = $this->basePath . $requestUrl;
-
-		$route = $this->routes->first(function ($route) use($requestUrl, $requestMethod)
+		$route = $this->routes->first(function ($route) use($requestUrl)
 		{
-			return $route->match($requestUrl) && $route->isAcceptedMethod($requestMethod);
+			return $route->match($requestUrl);
 		});
 
 		return $route;
@@ -57,7 +54,7 @@ class Router
 
 	public function findRouteByRequest(Request $request)
 	{
-		return $this->findRoute($request->getPathinfo(), $request->getMethod());
+		return $this->findRoute($request->getPathinfo());
 	}
 
 	/**
@@ -78,7 +75,11 @@ class Router
 
 		if ($route === false) {
 
-			throw new HttpNotFoundException('Rota não existe');
+			throw new NotFoundException('Rota não existe');
+
+		} elseif (! $route->isAcceptedMethod($request->getMethod())) {
+
+			throw new HttpException('Method not allowed', 405);
 		}
 
 		/** 
@@ -95,8 +96,12 @@ class Router
 
 	}
 
+
 	public function addRoute(array $methods, string $pattern, $action)
 	{
+
+		$pattern = trim($this->basePath . '/' . $pattern, '/');
+
 		$newRoute = new Route($pattern, $action);
 
 		$newRoute->setMethods($methods);
@@ -125,6 +130,24 @@ class Router
 	public function delete(string $pattern, $action)
 	{
 		return $this->addRoute(['DELETE'], $pattern, $action);
+	}
+
+	public function prefixes(string $prefix, \Closure $closure)
+	{
+		$newRouter = new static();
+
+		$newRouter->setBasepath($prefix);
+
+		$closure->call($newRouter);
+
+		$this->getCollection()->merge($newRouter->getCollection());
+
+		return $this;
+	}
+
+	public function getCollection() : Collection
+	{
+		return $this->routes;
 	}
 
 }

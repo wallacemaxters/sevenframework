@@ -2,7 +2,8 @@
 
 namespace WallaceMaxters\SevenFramework\Controller;
 
-use WallaceMaxters\SevenFramework\Http\Request;
+use WallaceMaxters\SevenFramework\Http\{Request, Response};
+use WallaceMaxters\SevenFramework\View\View;
 
 class Controller implements ControllerInterface
 {
@@ -26,5 +27,17 @@ class Controller implements ControllerInterface
 	public function getRequest() : Request
 	{
 		return $this->request;
-	}	
+	}
+
+
+	public function render(string $name, array $data = []) : View
+	{
+		return new View($name, $data);
+	}
+
+	public function redirect()
+	{
+		return new Redirector($this->request);
+	}
+
 }

@@ -2,24 +2,19 @@
 
 namespace WallaceMaxters\SevenFramework\Routing;
 
-use SplObjectStorage;
-use ArrayAccess;
+use IteratorAggregate, ArrayIterator;
 
 use WallaceMaxters\SevenFramework\Routing\Exceptions\RouteNotFoundException;
 
 /**
  * Coleção de rotas
  * */
-class Collection
+class Collection implements IteratorAggregate
 {
 	/**
 	 * @var array
 	 * */
-	protected $storage = [];
-
-	public function __construct()
-	{
-	}
+	protected $items = [];
 
 	/**
 	* @param \WallaceMaxters\SevenFramework\Routing\Route $route
@@ -27,7 +22,7 @@ class Collection
 	*/
 	public function add(Route $route)
 	{
-		$this->storage[] = $route;
+		$this->items[] = $route;
 
 		return $this;
 	}
@@ -37,7 +32,7 @@ class Collection
 	*/	
 	public function all() : array
 	{
-		return $this->storage;
+		return $this->items;
 	}
 
 	/**
@@ -47,7 +42,7 @@ class Collection
 	public function find(string $pattern)
 	{
 
-		foreach ($this->storage as $route) {
+		foreach ($this->items as $route) {
 
 			if ($route->match($pattern)) {
 
@@ -62,7 +57,7 @@ class Collection
 	*/
 	public function first(\Closure $callback)
 	{
-		foreach ($this->storage as $route) {
+		foreach ($this->items as $route) {
 
 			if ($callback($route)) {
 
@@ -85,5 +80,21 @@ class Collection
 
 		return $route;
 
+	}
+
+
+	public function merge(self $collection)
+	{
+		foreach ($collection as $route) {
+
+			$this->add($route);
+		}
+
+		return $this;
+	}
+
+	public function getIterator() : ArrayIterator
+	{
+		return new ArrayIterator($this->items);
 	}
 }

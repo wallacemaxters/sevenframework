@@ -3,6 +3,7 @@
 namespace WallaceMaxters\SevenFramework\Http;
 
 use WallaceMaxters\SevenFramework\TraitHelpers\CreateObjectTrait;
+use WallaceMaxters\SevenFramework\Http\Parameters\Header;
 
 /**
  * @todo Resolver conflitos com o método static::create
@@ -17,9 +18,10 @@ class JsonResponse extends Response
 
 		$header = new Header;
 
-		$header->setContentType('application/json');
+		$header->setContentType('application/json', '');
 
 		$this->setHeader($header);
 	}
 
 }
+

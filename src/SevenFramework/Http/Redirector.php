@@ -2,28 +2,22 @@
 
 namespace WallaceMaxters\SevenFramework\Http;
 
-use WallaceMaxters\SevenFramework\Exceptions\HttpException;
+use WallaceMaxters\SevenFramework\Http\Exceptions\HttpException;
 
 class Redirector extends Response
 {
-	public function __construct(string $location, int $statusCode = 302)
-	{
-		
-		$this->setStatusCode($setStatusCode);
 
-		$this->getHeader()->set('Location', $location);
+	protected $request;
+
+	public function __construct()
+	{
+		$this->setStatusCode(302);
 	}
 
-	public static function back()
-	{	
+	public function to(string $location)
+	{
+		$this->getHeader()->set('Location', $location);
 
-		$location = $_SERVER['HTTP_REFERER'] ?? null;
-
-		if ($location === null) {
-
-			throw new HttpException('Cannot redirect to empty value');
-		}
-
-		return new static($location, $statusCode);
+		return $this;
 	}
 }

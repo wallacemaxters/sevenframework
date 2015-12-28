@@ -2,6 +2,10 @@
 
 namespace WallaceMaxters\SevenFramework\View;
 
+/**
+* @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
+*/
+
 class Section
 {	
 
@@ -15,7 +19,7 @@ class Section
 
 	public function __construct(string $name)
 	{
-		$this->name = $name;
+		$this->setName($name);
 	}
 
 	public function setName(string $name)
@@ -38,7 +42,7 @@ class Section
 		$this->content .= $content;
 	}
 
-	public function getContent()
+	public function getContent() : string
 	{
 		return $this->content;
 	}
@@ -64,7 +68,12 @@ class Section
 
 	public function end()
 	{
+
+		if (! $this->started) return;
+
 		$this->setContent(ob_get_clean());
+
+		$this->closed = true;
 	}
 
 	public function __toString()

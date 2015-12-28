@@ -10,10 +10,10 @@ use WallaceMaxters\SevenFramework\Routing\Router;
 use WallaceMaxters\SevenFramework\Routing\Dispatcher;
 use WallaceMaxters\SevenFramework\Http\Request;
 use WallaceMaxters\SevenFramework\View\View;
-use WallaceMaxters\SevenFramework\Http\HttpKernel;
 use WallaceMaxters\SevenFramework\Application\Application;
 use WallaceMaxters\SevenFramework\Http\JsonResponse;
 use WallaceMaxters\SevenFramework\Http\Response;
+use WallaceMaxters\SevenFramework\Http\Redirector;
 
 
 class BasicController extends \WallaceMaxters\SevenFramework\Controller\Controller
@@ -22,27 +22,35 @@ class BasicController extends \WallaceMaxters\SevenFramework\Controller\Controll
 	{
 		$request = $this->getRequest();
 
-		return Response::json($request->getQuery());
+		$redirector = new Redirector($request);
+
+		return $redirector->back();
 	}
 }
 
 $router = new Router;
 
-$request = Request::createFromGlobals();
-
-$router->addRoute(['*'], '/', function () use($request)
+$router->addRoute(['*'], '/', function (string $name = '') : string
 {
-	return Response::json([
-		'teste'               => 'testando',
-		$request->getMethod() => $_POST
-	]);
+	$request = $this->getRequest();
+
+	$upload = $request->getFiles();
+
+	if ($upload->has('file')) {
+
+		var_dump($file = $upload->get('file'));
+
+		foreach($upload->get('file') as $file) {
+
+			print_r($file);
+		}
+	}
+
+	return $this->render('templates/index', ['nome' => $name]);
+	
 });
 
-$r = $router->get('/page', 'BasicController::getPage')
-			->setName('basic.page');
+$router->get('/page', 'BasicController::getPage')->setName('basic.page');
 
-
-$router->dispatchToRoute($request);
-
-
+$router->dispatchToRoute(new Request);
 
